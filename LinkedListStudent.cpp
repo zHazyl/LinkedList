@@ -23,6 +23,11 @@ struct LinkedListSt {
     NodeSt *pTail;
 };
 
+void CreateListSt(LinkedListSt &st) {
+    st.pHead = NULL;
+    st.pTail = NULL;
+}
+
 bool IsEmptyListSt(LinkedListSt &st) {
     if (st.pHead == NULL)
         return 1;
@@ -34,12 +39,19 @@ void InputListStuFile(LinkedListSt &st, ifstream &ifs) {
         return;
     int n;
     ifs >> n;
-    NodeSt *p = st.pHead;
-    while (p != NULL) {
-        ifs >> p->data.name;
-        ifs >> p->data.mark;
+    NodeSt *p = new NodeSt();
+    st.pHead = new NodeSt();
+    p->pNext = st.pHead;
+    for (int i = 0; i < n; ++i) {
+        ifs >> p->pNext->data.name;
+        ifs.ignore();
+        ifs >> p->pNext->data.mark;
         p = p->pNext;
+        p->pNext = new NodeSt();
     }
+    st.pTail = p;
+    delete p->pNext;
+    p->pNext = NULL;
 }
 
 void OutputArrStu(LinkedListSt &st) {
@@ -130,6 +142,110 @@ void DelStUnder5(LinkedListSt &st) {
     st.pTail = p;
 }
 
-int main() {
+float MaxMark(LinkedListSt &st) {
+    float max = 0;
+    NodeSt *p = st.pHead;
+    while (p != NULL) {
+        if (p->data.mark > max) {
+            max = p->data.mark;
+        }
+        p = p->pNext;
+    }
+    return max;
+}
 
+float MinMark(LinkedListSt &st) {
+    float min = 10;
+    NodeSt *p = st.pHead;
+    while (p != NULL) {
+        if (p->data.mark < min) {
+            min = p->data.mark;
+        }
+        p = p->pNext;
+    }
+    return min;
+}
+
+void MaxFirstStu(LinkedListSt &st) {
+    float max = MaxMark(st);
+    NodeSt *p = st.pHead;
+    NodeSt *t;
+    while (p->pNext != NULL) {
+        if (p->pNext->data.mark == max) {
+            t = p->pNext;
+            p->pNext = p->pNext->pNext;
+            AddHeadListSt(st, t);
+        } else {
+            p = p->pNext;
+        }
+    }
+    st.pTail = p;
+}
+
+void MinLastStu(LinkedListSt &st) {
+    float min = MinMark(st);
+    NodeSt *p = st.pHead;
+    NodeSt *t = NULL;
+    while (p->pNext != NULL) {
+        if (p->pNext->data.mark == min) {
+            t = p->pNext;
+            p->pNext = p->pNext->pNext;
+            t->pNext = NULL;
+            break;
+        }
+        p = p->pNext;
+    }
+    NodeSt *k = t;
+    while(p->pNext->pNext != NULL) {
+        if (p->pNext->data.mark == min) {
+            k->pNext = p->pNext;
+            p->pNext = p->pNext->pNext;
+            k->pNext->pNext = NULL;
+            k = k->pNext;
+        } else {
+            p = p->pNext;
+        }
+    }
+    st.pTail->pNext = t;
+    st.pTail = k;
+}
+
+int main() {
+    cout << "\n1======================\n";
+    ifstream ifs1("DataStudent_1.txt", ios::in);
+    if (!ifs1.good()) {
+        cout << "error";
+        return 0;
+    }
+    LinkedListSt st1;
+    CreateListSt(st1);
+    InputListStuFile(st1, ifs1);
+    DelStUnder5(st1);
+    OutputArrStu(st1);
+
+    cout << "\n2======================\n";
+    ifstream ifs2("DataStudent_2.txt", ios::in);
+    if (!ifs2.good()) {
+        cout << "error";
+        return 0;
+    }
+    LinkedListSt st2;
+    CreateListSt(st2);
+    InputListStuFile(st2, ifs2);
+    MaxFirstStu(st2);
+    OutputArrStu(st2);
+
+    cout << "\n3======================\n";
+    ifstream ifs3("DataStudent_3.txt", ios::in);
+    if (!ifs3.good()) {
+        cout << "error";
+        return 0;
+    }
+    LinkedListSt st3;
+    CreateListSt(st3);
+    InputListStuFile(st3, ifs3);
+    MinLastStu(st3);
+    OutputArrStu(st3);
+
+    getchar();
 }
