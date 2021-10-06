@@ -247,5 +247,10 @@ int main() {
     MinLastStu(st3);
     OutputArrStu(st3);
 
+    cout << "\n1+2+3======================\n";
+    MaxFirstStu(st1);
+    MinLastStu(st1);
+    OutputArrStu(st1);
+
     getchar();
 }
