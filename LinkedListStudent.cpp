@@ -239,6 +239,8 @@ void DelNodeN(LinkedListSt &st, int n) {
 
 void Reverse(LinkedListSt &st) {
     LinkedListSt r;
+    r.pHead = NULL;
+    r.pTail = NULL;
     NodeSt *p = st.pHead;
     NodeSt *t;
     while (p != NULL) {
@@ -260,6 +262,7 @@ int main() {
     LinkedListSt st1;
     CreateListSt(st1);
     InputListStuFile(st1, ifs1);
+    Reverse(st1);
     DelStUnder5(st1);
     OutputArrStu(st1);
 
