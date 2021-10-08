@@ -107,6 +107,7 @@ void DelTailListSt(LinkedListSt &st) {
     if (IsEmptyListSt(st))
         return;
     if (st.pHead->pNext = NULL) {
+	delete st.pHead;
         st.pHead = NULL;
         st.pTail = NULL;
         return;
@@ -118,6 +119,12 @@ void DelTailListSt(LinkedListSt &st) {
     delete p->pNext;
     p->pNext = NULL;
     st.pTail = p;
+}
+
+void DelList(LinkedListSt &st) {
+    while (st.pHead != NULL) {
+        DelHeadListSt(st);
+    }
 }
 
 void DelStUnder5(LinkedListSt &st) {
