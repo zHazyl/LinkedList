@@ -237,6 +237,19 @@ void DelNodeN(LinkedListSt &st, int n) {
     delete t;
 }
 
+void Reverse(LinkedListSt &st) {
+    LinkedListSt r;
+    NodeSt *p = st.pHead;
+    NodeSt *t;
+    while (p != NULL) {
+        t = p->pNext;
+        AddHeadListSt(r, p);
+        p = t;
+    }
+    st.pHead = r.pHead;
+    st.pTail = r.pTail;
+}
+
 int main() {
     cout << "\n1======================\n";
     ifstream ifs1("DataStudent_1.txt", ios::in);
