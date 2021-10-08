@@ -13,103 +13,234 @@ struct Student {
     }
 };
 
-struct ArrayStudent {
-    int n;
-    Student arrSt[10000];
+struct NodeSt {
+    Student data;
+    int next;
 };
 
-void InputArrStuFile(ArrayStudent &arr, ifstream &ifs) {
-    ifs >> arr.n;
-    int n = arr.n;
+struct LinkedListSt {
+    NodeSt list[1000];
+    int head;
+    int tail;
+};
+
+void CreateListSt(LinkedListSt &st) {
+    st.head = -1;
+    st.tail = -1;
+}
+
+bool IsEmptyListSt(LinkedListSt &st) {
+    if (st.head == -1)
+        return 1;
+    return 0;
+}
+
+void InputListStuFile(LinkedListSt &st, ifstream &ifs) {
+    if (!IsEmptyListSt(st))
+        return;
+    int n;
+    ifs >> n;
     for (int i = 0; i < n; ++i) {
-        ifs >> arr.arrSt[i].name;
-        ifs.ignore();
-        ifs >> arr.arrSt[i].mark;
+        ifs >> st.list[i].data.name;
+        ifs >> st.list[i].data.mark;
+        st.list[i].next = i + 1;
+    }
+    st.head = 0;
+    st.tail = n - 1;
+    st.list[st.tail].next = -1;
+}
+
+void OutputArrStu(LinkedListSt &st) {
+    int p = st.head;
+    while (p != -1) {
+        cout << st.list[p].data.name << " " << st.list[p].data.mark << endl;
+        p = st.list[p].next;
     }
 }
 
-void OutputArrStu(ArrayStudent &arr) {
-    int n = arr.n;
-    for (int i = 0; i < n; ++i) {
-        cout << arr.arrSt[i].name << " " << arr.arrSt[i].mark << endl;
+void AddHeadListSt(LinkedListSt &st, int p) {
+    if (IsEmptyListSt(st)) {
+        st.list[p].next = -1;
+        st.head = p;
+        st.tail = p;
+        return;
+    }
+    st.list[p].next = st.head;
+    st.head = p;
+}
+
+void AddTailListSt(LinkedListSt &st, int p) {
+    if (p == -1)
+        return;
+    if (IsEmptyListSt(st)) {
+     st.list[p].next = -1;
+        st.head = p;
+        st.tail = p;
+        return;
+    }
+    st.list[st.tail].next = p;
+    st.list[p].next = -1;
+    st.tail = p;
+}
+
+void DelHeadListSt(LinkedListSt &st) {
+    if (IsEmptyListSt(st))
+        return;
+    if (st.list[st.head].next = -1) {
+        st.head = -1;
+        st.tail = -1;
+        return;
+    }
+    int p = st.list[st.head].next;
+    st.head = -1;
+    st.head = p;
+}
+
+void DelTailListSt(LinkedListSt &st) {
+    if (IsEmptyListSt(st))
+        return;
+    if (st.list[st.head].next = -1) {
+        st.head = -1;
+        st.tail = -1;
+        return;
+    }
+    int p = st.head;
+    while  (st.list[st.list[p].next].next != -1) {
+        p = st.list[p].next;
+    }
+    st.list[p].next = -1;
+    st.tail = p;
+}
+
+void DelList(LinkedListSt &st) {
+    while (st.head != -1) {
+        DelHeadListSt(st);
     }
 }
 
-void DeleteStuUnder5(ArrayStudent &arr) {
-    int n = arr.n;
-    int nod = 0;
-    for (int i = 0; ; ++i) {
-        while (arr.arrSt[i].mark < 5 && i < n) {
-            ++nod;
-            ++i;
+void DelStUnder5(LinkedListSt &st) {
+    if (IsEmptyListSt(st))
+        return;
+    while (st.list[st.head].data.mark < 5) {
+        DelHeadListSt(st);
+    }
+    if (IsEmptyListSt(st))
+        return;
+    int p = st.head;
+    int t;
+    while  (st.list[p].next != -1) {
+        if  (st.list[st.list[p].next].data.mark < 5) {
+            t = st.list[p].next;
+            st.list[p].next = st.list[t].next;
+        } else {
+            p = st.list[p].next;
         }
-        if (i == n)
-            break;
-        arr.arrSt[i - nod] = arr.arrSt[i];
     }
-    arr.n -= nod;
+    st.tail = p;
 }
 
-float MaxMark(ArrayStudent &arr) {
-    int n = arr.n;
+float MaxMark(LinkedListSt &st) {
     float max = 0;
-    for (int i = 0; i < n; ++i) {
-        if (arr.arrSt[i].mark > max)
-            max = arr.arrSt[i].mark;
+    int p = st.head;
+    while (p != -1) {
+        if  (st.list[p].data.mark > max) {
+            max = st.list[p].data.mark;
+        }
+        p = st.list[p].next;
     }
     return max;
 }
 
-float MinMark(ArrayStudent &arr) {
-    int n = arr.n;
+float MinMark(LinkedListSt &st) {
     float min = 10;
-    for (int i = 0; i < n; ++i) {
-        if (arr.arrSt[i].mark < min)
-            min = arr.arrSt[i].mark;
+    int p = st.head;
+    while (p != -1) {
+        if  (st.list[p].data.mark < min) {
+            min = st.list[p].data.mark;
+        }
+        p = st.list[p].next;
     }
     return min;
 }
 
-void MaxFirstStu(ArrayStudent &arr) {
-    float max = MaxMark(arr);
-    Student stuTop[1000];
-    int numMax = 0;
-    for (int i = arr.n - 1; ; --i) {
-        while (arr.arrSt[i].mark == max && i >= 0) {
-            stuTop[numMax] = arr.arrSt[i];
-            ++numMax;
-            --i;
+void MaxFirstStu(LinkedListSt &st) {
+    float max = MaxMark(st);
+    int p = st.head;
+    int t;
+    while  (st.list[p].next != -1) {
+        if  (st.list[st.list[p].next].data.mark == max) {
+            t = st.list[p].next;
+            st.list[p].next = st.list[st.list[p].next].next;
+            AddHeadListSt(st, t);
+        } else {
+            p = st.list[p].next;
         }
-        if (i < 0)
-            break;
-        arr.arrSt[i + numMax] = arr.arrSt[i];
     }
-    for (int i = numMax - 1; i >= 0; --i) {
-        arr.arrSt[numMax - 1 - i] = stuTop[i];
-    }
+    st.tail = p;
 }
 
-void MinLastStu(ArrayStudent &arr) {
-    float min = MinMark(arr);
-    Student stuTop[1000];
-    int numMin = 0;
-    int n = arr.n;
-    for (int i = 0; ; ++i) {
-        while (arr.arrSt[i].mark == min && i < n) {
-            stuTop[numMin] = arr.arrSt[i];
-            ++numMin;
-            ++i;
-        }
-        if (i == n)
+void MinLastStu(LinkedListSt &st) {
+    float min = MinMark(st);
+    int p = st.head;
+    int t = -1;
+    while  (st.list[p].next != -1) {
+        if  (st.list[st.list[p].next].data.mark == min) {
+            t = st.list[p].next;
+            st.list[p].next = st.list[st.list[p].next].next;
+            st.list[t].next = -1;
             break;
-        arr.arrSt[i - numMin] = arr.arrSt[i];
+        }
+        p = st.list[p].next;
     }
-    int k = 0;
-    for (int i = numMin - 1; i >= 0; --i) {
-        arr.arrSt[n - 1 - k] = stuTop[i];
-        ++k;
+    int k = t;
+    while (st.list[st.list[p].next].next != -1) {
+        if  (st.list[st.list[p].next].data.mark == min) {
+            st.list[k].next = st.list[p].next;
+            st.list[p].next = st.list[st.list[p].next].next;
+            st.list[st.list[k].next].next = -1;
+            k = st.list[k].next;
+        } else {
+            p = st.list[p].next;
+        }
     }
+    st.list[st.tail].next = t;
+    st.tail = k;
 }
+
+// void DelNodeN(LinkedListSt &st, int n) {
+//     if (n == 0) {
+//         DelHeadListSt(st);
+//         return;
+//     }
+//     int p = st.head;
+//     int i = 0;
+//     while (i < n - 1) {
+//         ++i;
+//         p = st.list[p].next;
+//     }
+//     if  st.list[st.head].data.next->next == -1) {
+//         DelTailListSt(st);
+//         return;
+//     }
+//     int t = st.list[p].next;
+//     st.list[st.head].data.next = t->next;
+//     delete t;
+// }
+
+// void Reverse(LinkedListSt &st) {
+//     LinkedListSt r;
+//     r.head = -1;
+//     r.tail = -1;
+//     int p = st.head;
+//     int t;
+//     while (p != -1) {
+//         t = st.list[p].next;
+//         AddHeadListSt(r, p);
+//         p = t;
+//     }
+//     st.head = r.head;
+//     st.tail = r.tail;
+// }
 
 int main() {
     cout << "\n1======================\n";
@@ -118,43 +249,42 @@ int main() {
         cout << "error";
         return 0;
     }
-    ArrayStudent arr1;
-    InputArrStuFile(arr1, ifs1);
-    ifs1.close();
-    DeleteStuUnder5(arr1);
-    OutputArrStu(arr1);
+    LinkedListSt st1;
+    CreateListSt(st1);
+    InputListStuFile(st1, ifs1);
+    // Reverse(st1);
+    // OutputArrStu(st1);
+    DelStUnder5(st1);
+    OutputArrStu(st1);
 
     cout << "\n2======================\n";
-    
     ifstream ifs2("DataStudent_2.txt", ios::in);
     if (!ifs2.good()) {
         cout << "error";
         return 0;
     }
-    ArrayStudent arr2;
-    InputArrStuFile(arr2, ifs2);
-    ifs2.close();
-    MaxFirstStu(arr2);
-    OutputArrStu(arr2);
+    LinkedListSt st2;
+    CreateListSt(st2);
+    InputListStuFile(st2, ifs2);
+    MaxFirstStu(st2);
+    OutputArrStu(st2);
 
     cout << "\n3======================\n";
-
     ifstream ifs3("DataStudent_3.txt", ios::in);
     if (!ifs3.good()) {
         cout << "error";
         return 0;
     }
-    ArrayStudent arr3;
-    InputArrStuFile(arr3, ifs3);
-    ifs3.close();
-    MinLastStu(arr3);
-    OutputArrStu(arr3);
+    LinkedListSt st3;
+    CreateListSt(st3);
+    InputListStuFile(st3, ifs3);
+    MinLastStu(st3);
+    OutputArrStu(st3);
 
     cout << "\n1+2+3======================\n";
-    MaxFirstStu(arr1);
-    MinLastStu(arr1);
-    OutputArrStu(arr1);
+    MaxFirstStu(st1);
+    MinLastStu(st1);
+    OutputArrStu(st1);
 
     getchar();
-    return 0;
 }
