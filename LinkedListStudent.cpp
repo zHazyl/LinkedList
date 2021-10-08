@@ -217,6 +217,26 @@ void MinLastStu(LinkedListSt &st) {
     st.pTail = k;
 }
 
+void DelNodeN(LinkedListSt &st, int n) {
+    if (n == 0) {
+        DelHeadListSt(st);
+        return;
+    }
+    NodeSt *p = st.pHead;
+    int i = 0;
+    while (i < n - 1) {
+        ++i;
+        p = p->pNext;
+    }
+    if (p->pNext->pNext == NULL) {
+        DelTailListSt(st);
+        return;
+    }
+    NodeSt *t = p->pNext;
+    p->pNext = t->pNext;
+    delete t;
+}
+
 int main() {
     cout << "\n1======================\n";
     ifstream ifs1("DataStudent_1.txt", ios::in);
