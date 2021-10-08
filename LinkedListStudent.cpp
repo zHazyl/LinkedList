@@ -263,6 +263,7 @@ int main() {
     CreateListSt(st1);
     InputListStuFile(st1, ifs1);
     Reverse(st1);
+    OutputArrStu(st1);
     DelStUnder5(st1);
     OutputArrStu(st1);
 
