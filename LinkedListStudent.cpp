@@ -92,7 +92,7 @@ void AddTailListSt(LinkedListSt &st, NodeSt *p) {
 void DelHeadListSt(LinkedListSt &st) {
     if (IsEmptyListSt(st))
         return;
-    if (st.pHead->pNext = NULL) {
+    if (st.pHead->pNext == NULL) {
         st.pHead = NULL;
         st.pTail = NULL;
         return;
